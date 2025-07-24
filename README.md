@@ -71,6 +71,11 @@ python3 -m uvicorn agents.super_agent:super_app --reload --port 8000
 
 ## Application Screenshots
 
+### Welcome Page
+
+![Welcome Page](docs/images/welcome-page.png)
+_The clean, modern interface users see when first opening the application._
+
 ### Summarize Flow
 
 ![Summarize Flow](docs/images/summarize-flow.png)
@@ -150,6 +155,7 @@ mcps/
 │   └── utils.py
 ├── docs/
 │   └── images/
+│       ├── welcome-page.png
 │       ├── summarize-flow.png
 │       ├── key-highlights-flow.png
 │       └── task-extraction-flow.png
