@@ -1,0 +1,103 @@
+"""Summarizer Agent."""
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+from typing import Dict, Any
+import logging
+
+from .models import SummarizeInput, TranscriptInput
+from .utils import process_transcript_tool, log_tool_invocation
+
+# Configure logging
+logger = logging.getLogger(__name__)
+
+summarizer_app = FastAPI(
+    title="Summarizer Agent",
+    description="Agent for summarizing transcripts and extracting key points",
+    version="1.0.0",
+)
+
+
+@summarizer_app.get("/.well-known/ai-plugin.json")
+def discover() -> Dict[str, Any]:
+    """Discover available tools for this agent."""
+    return {
+        "tools": [
+            {
+                "name": "summarize_transcript",
+                "description": "Summarizes a transcript into a short paragraph with configurable style.",
+                "parameters": SummarizeInput.schema(),
+            },
+            {
+                "name": "highlight_key_points",
+                "description": "Extracts 3–5 main insights from a transcript as bullet points.",
+                "parameters": TranscriptInput.schema(),
+            },
+        ]
+    }
+
+
+class InvokeRequest(BaseModel):
+    """MCP standard invoke request model."""
+
+    name: str = Field(..., description="Name of the tool to invoke")
+    arguments: Dict[str, Any] = Field(..., description="Arguments for the tool")
+
+
+@summarizer_app.post("/invoke")
+async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
+    """
+    MCP standard invoke endpoint that routes to the appropriate tool.
+
+    Args:
+        request: Contains tool name and arguments
+
+    Returns:
+        Standardized response from the invoked tool
+    """
+    try:
+        log_tool_invocation(request.name, request.arguments)
+
+        if request.name == "summarize_transcript":
+            # Validate and parse arguments
+            data = SummarizeInput(**request.arguments)
+
+            prompt = f"""Summarize the following transcript in a {data.style} style:
+
+{data.transcript}
+
+Please provide a clear, concise summary that captures the main points and outcomes of this meeting."""
+
+            return await process_transcript_tool(data, prompt)
+
+        elif request.name == "highlight_key_points":
+            # Validate and parse arguments
+            data = TranscriptInput(**request.arguments)
+
+            prompt = f"""Extract 3-5 key insights from the following transcript as bullet points:
+
+{data.transcript}
+
+Please provide the key points in a clear, bulleted format. Focus on:
+- Main decisions made
+- Action items identified
+- Important insights or findings
+- Next steps discussed"""
+
+            return await process_transcript_tool(data, prompt)
+
+        else:
+            raise HTTPException(status_code=400, detail=f"Unknown tool: {request.name}")
+
+    except HTTPException:
+        # Re-raise HTTP exceptions as they're already properly formatted
+        raise
+    except Exception as e:
+        logger.error(f"Error in invoke_tool: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to invoke tool: {str(e)}")
+
+
+@summarizer_app.get("/health")
+async def health_check() -> Dict[str, str]:
+    """Health check endpoint."""
+    return {"status": "healthy", "agent": "summarizer"}

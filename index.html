@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meeting Transcript Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        gap: 30px;
+      }
+
+      .input-section {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .output-section {
+        flex: 1;
+        min-width: 0;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+          max-width: 600px;
+        }
+
+        .input-section,
+        .output-section {
+          width: 100%;
+        }
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 2.4rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+
+      .features {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .features h2 {
+        color: #555;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .features ul {
+        list-style: none;
+      }
+
+      .features li {
+        padding: 6px 0;
+        color: #555;
+        position: relative;
+        padding-left: 25px;
+        font-weight: 400;
+      }
+
+      .features li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: #444;
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+      }
+
+      textarea {
+        width: 100%;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        padding: 15px;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .transcript-input {
+        min-height: 150px;
+      }
+
+      .prompt-input {
+        min-height: 80px;
+      }
+
+      button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        letter-spacing: 0.01em;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .result {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        display: none;
+        font-size: 15px;
+        line-height: 1.6;
+        height: fit-content;
+        min-height: 200px;
+      }
+
+      .result h3 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+        letter-spacing: -0.01em;
+      }
+
+      .loading {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        font-size: 14px;
+        padding: 20px;
+      }
+
+      .response-header {
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+      }
+
+      .response-header h3 {
+        margin: 0 0 5px 0;
+        color: #2c3e50;
+      }
+
+      .metadata {
+        color: #7f8c8d;
+        font-size: 0.9em;
+      }
+
+      .response-content {
+        line-height: 1.6;
+        color: #2c3e50;
+      }
+
+      .error {
+        background-color: #fdf2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 15px;
+        color: #dc2626;
+      }
+
+      .fallback {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 15px;
+      }
+
+      .fallback pre {
+        background-color: #f1f5f9;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="input-section">
+        <h1>Meeting Transcript Analyzer</h1>
+
+        <div class="features">
+          <h2>What I can do:</h2>
+          <ul>
+            <li>Summarize</li>
+            <li>Key Highlights</li>
+            <li>Grab Tasks</li>
+          </ul>
+        </div>
+
+        <form id="analyzerForm">
+          <div class="form-group">
+            <label for="transcript">Meeting Transcript:</label>
+            <textarea
+              id="transcript"
+              class="transcript-input"
+              placeholder="Paste your meeting transcript here..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt">What would you like me to do?</label>
+            <textarea
+              id="prompt"
+              class="prompt-input"
+              placeholder="e.g., 'Summarize this meeting', 'Extract key points', 'Find all tasks'..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit">Analyze Transcript</button>
+        </form>
+      </div>
+
+      <div class="output-section">
+        <h2 style="margin-bottom: 15px; color: #333">Analysis Results</h2>
+        <div id="result" class="result">
+          <div id="resultContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("analyzerForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const transcript = document.getElementById("transcript").value;
+          const prompt = document.getElementById("prompt").value;
+          const resultDiv = document.getElementById("result");
+          const resultContent = document.getElementById("resultContent");
+
+          // Show loading state
+          resultDiv.style.display = "block";
+          resultContent.innerHTML =
+            '<div class="loading">🤔 Analyzing your transcript...</div>';
+
+          try {
+            const response = await fetch("/ask", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ transcript, prompt }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Handle structured response format
+            if (data.type && data.title && data.content) {
+              // Format the response nicely
+              const formattedResponse = `
+                        <div class="response-header">
+                            <h3>${data.title}</h3>
+                            ${
+                              data.metadata
+                                ? `
+                                <div class="metadata">
+                                    <small>
+                                        📊 ${data.metadata.transcript_length} characters | 
+                                        🔧 ${data.metadata.tool_used}
+                                        ${data.metadata.points_count ? ` | 📍 ${data.metadata.points_count} points` : ""}
+                                        ${data.metadata.tasks_count ? ` | 📝 ${data.metadata.tasks_count} tasks` : ""}
+                                    </small>
+                                </div>
+                            `
+                                : ""
+                            }
+                        </div>
+                        <div class="response-content">
+                            ${data.content.replace(/\n/g, "<br>")}
+                        </div>
+                    `;
+
+              resultContent.innerHTML = formattedResponse;
+            } else if (data.error) {
+              // Handle error responses
+              resultContent.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Error</h3>
+                            <p>${data.error}</p>
+                        </div>
+                    `;
+            } else {
+              // Fallback for unexpected response format
+              resultContent.innerHTML = `
+                        <div class="fallback">
+                            <h3>📄 Response</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+            }
+          } catch (error) {
+            resultContent.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p>Failed to process request: ${error.message}</p>
+                    </div>
+                `;
+          }
+        });
+    </script>
+  </body>
+</html>
