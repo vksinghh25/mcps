@@ -22,22 +22,6 @@ class TranscriptInput(BaseModel):
         return v
 
 
-class SummarizeInput(TranscriptInput):
-    """Input model for summarization operations."""
-
-    style: str = Field(
-        default="brief", description="Summary style (brief, detailed, etc.)"
-    )
-
-    @validator("style")
-    def validate_style(cls, v):
-        """Validate summary style."""
-        valid_styles = ["brief", "detailed", "executive", "technical"]
-        if v not in valid_styles:
-            raise ValueError(f"Style must be one of: {valid_styles}")
-        return v
-
-
 class ToolResponse(BaseModel):
     """Standardized tool response model."""
 

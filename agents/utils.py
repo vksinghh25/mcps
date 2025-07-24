@@ -163,7 +163,6 @@ def format_response(
                     "metadata": {
                         "tool_used": "summarize_transcript",
                         "transcript_length": len(transcript),
-                        "style": "brief",
                     },
                 }
 
@@ -174,7 +173,6 @@ def format_response(
                 "metadata": {
                     "tool_used": "summarize_transcript",
                     "transcript_length": len(transcript),
-                    "style": "brief",
                 },
             }
 

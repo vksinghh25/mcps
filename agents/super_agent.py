@@ -177,8 +177,6 @@ IMPORTANT: Respond with ONLY the exact tool name from the list above. Do not add
         payload = {"transcript": data.transcript}
 
         # Add optional parameters based on tool requirements
-        if "style" in tool.get("parameters", {}).get("properties", {}):
-            payload["style"] = "brief"
         if "context" in tool.get("parameters", {}).get("properties", {}):
             payload["context"] = "end of week"
 

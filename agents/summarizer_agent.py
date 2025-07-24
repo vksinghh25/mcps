@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, Any
 import logging
 
-from .models import SummarizeInput, TranscriptInput
+from .models import TranscriptInput
 from .utils import process_transcript_tool, log_tool_invocation
 
 # Configure logging
@@ -25,8 +25,8 @@ def discover() -> Dict[str, Any]:
         "tools": [
             {
                 "name": "summarize_transcript",
-                "description": "Summarizes a transcript into a short paragraph with configurable style.",
-                "parameters": SummarizeInput.schema(),
+                "description": "Summarizes a transcript into a short paragraph.",
+                "parameters": TranscriptInput.schema(),
             },
             {
                 "name": "highlight_key_points",
@@ -60,9 +60,9 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
 
         if request.name == "summarize_transcript":
             # Validate and parse arguments
-            data = SummarizeInput(**request.arguments)
+            data = TranscriptInput(**request.arguments)
 
-            prompt = f"""Summarize the following transcript in a {data.style} style:
+            prompt = f"""Summarize the following transcript in a brief, concise style:
 
 {data.transcript}
 
