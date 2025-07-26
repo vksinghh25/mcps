@@ -46,15 +46,7 @@ def discover() -> Dict[str, Any]:
 
 @task_app.post("/invoke")
 async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
-    """
-    MCP standard invoke endpoint that routes to the appropriate tool.
-
-    Args:
-        request: Contains tool name and arguments
-
-    Returns:
-        MCP-compliant response with content array
-    """
+    """Route tool invocation to appropriate handler."""
     try:
         log_tool_invocation(request.name, request.arguments)
 

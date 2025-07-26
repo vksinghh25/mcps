@@ -45,18 +45,7 @@ class AskInput(BaseModel):
 
 
 async def fetch_tools_from_plugin(endpoint: str) -> List[Dict[str, Any]]:
-    """
-    Fetch tool definitions from a plugin endpoint.
-
-    Args:
-        endpoint: The plugin endpoint URL
-
-    Returns:
-        List of tool definitions
-
-    Raises:
-        HTTPException: If the request fails
-    """
+    """Fetch tool definitions from a plugin endpoint."""
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(endpoint)
@@ -94,15 +83,7 @@ async def populate_tool_registry():
 
 
 def determine_sub_agent_url(tool_name: str) -> str:
-    """
-    Determine which sub-agent URL to use based on tool name.
-
-    Args:
-        tool_name: Name of the tool
-
-    Returns:
-        Base URL for the appropriate sub-agent
-    """
+    """Get sub-agent URL based on tool name."""
     if "summarize" in tool_name or "highlight" in tool_name:
         return MicroAgentConfig.SUMMARIZER_URL
     elif "extract" in tool_name or "assign" in tool_name:
@@ -124,15 +105,7 @@ async def serve_ui() -> HTMLResponse:
 
 @super_app.post("/ask")
 async def ask(data: AskInput) -> Dict[str, Any]:
-    """
-    Route user request to appropriate sub-agent based on LLM analysis.
-
-    Args:
-        data: Input containing transcript and user prompt
-
-    Returns:
-        Response from the selected sub-agent
-    """
+    """Route user request to appropriate sub-agent."""
     try:
         log_tool_invocation(
             "ask", {"transcript_length": len(data.transcript), "prompt": data.prompt}
