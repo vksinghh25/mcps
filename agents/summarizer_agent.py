@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, Any, List
 import logging
 
-from .models import TranscriptInput
+from .models import TranscriptInput, InvokeRequest
 from .utils import process_transcript_tool, log_tool_invocation
 
 # Configure logging
@@ -61,11 +61,7 @@ def discover() -> Dict[str, Any]:
     }
 
 
-class InvokeRequest(BaseModel):
-    """MCP standard invoke request model."""
 
-    name: str = Field(..., description="Name of the tool to invoke")
-    arguments: Dict[str, Any] = Field(..., description="Arguments for the tool")
 
 
 @summarizer_app.post("/invoke")

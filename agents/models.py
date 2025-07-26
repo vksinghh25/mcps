@@ -1,7 +1,7 @@
 """Shared Pydantic models."""
 
 from pydantic import BaseModel, Field, validator
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from .config import validate_transcript
 
 
@@ -27,3 +27,10 @@ class ToolResponse(BaseModel):
 
     output: str = Field(..., description="The tool output")
     error: Optional[str] = Field(None, description="Error message if any")
+
+
+class InvokeRequest(BaseModel):
+    """MCP-compliant tool invocation request model."""
+
+    name: str = Field(..., description="Name of the tool to invoke")
+    arguments: Dict[str, Any] = Field(..., description="Arguments for the tool")
