@@ -1,6 +1,6 @@
 # Meeting Transcript Analyzer - Multi-Agent MCP App
 
-A multi-agent system that analyzes meeting transcripts using AI-powered summarization, key point extraction, and task identification.
+A multi-agent system that analyzes meeting transcripts using AI-powered summarization, key point extraction, and task identification. **Fully compliant with the Model Context Protocol (MCP) standard.**
 
 ## Features
 
@@ -8,6 +8,53 @@ A multi-agent system that analyzes meeting transcripts using AI-powered summariz
 - **Key Highlights**: Extract and display key points as bullet points (•) (see [screenshots](#application-screenshots))
 - **Grab Tasks**: Identify actionable tasks from meeting discussions (see [screenshots](#application-screenshots))
 - **Modern Web UI**: Clean, responsive horizontal layout interface for easy interaction
+- **MCP Compliant**: Full adherence to Model Context Protocol standards
+
+## MCP Compliance
+
+This application is fully compliant with the **Model Context Protocol (MCP)** standard:
+
+### ✅ MCP Standard Implementation
+
+- **Discovery Endpoint**: `/.well-known/mcp.json` (MCP compliant)
+- **Tool Schema**: JSON Schema format with `inputSchema` property
+- **Response Format**: MCP-compliant `content` array with structured content
+- **Request Format**: Standard MCP `invoke` endpoint with `name` and `arguments`
+- **Capabilities**: Proper capabilities object in discovery response
+
+### 🔧 MCP Endpoints
+
+Each agent exposes MCP-compliant endpoints:
+
+```
+GET  /.well-known/mcp.json     # Tool discovery (MCP standard)
+POST /invoke                   # Tool invocation (MCP standard)
+GET  /health                   # Health check
+```
+
+### 📋 MCP Tool Definitions
+
+**Summarizer Agent Tools:**
+- `summarize_transcript`: Generates concise meeting summaries
+- `highlight_key_points`: Extracts 3-5 key insights as bullet points
+
+**Task Extractor Agent Tools:**
+- `extract_tasks`: Identifies actionable tasks from transcripts
+
+### 🔄 MCP Response Format
+
+All tools return MCP-compliant responses:
+
+```json
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Tool output content here..."
+    }
+  ]
+}
+```
 
 ## Prerequisites
 
@@ -110,12 +157,39 @@ _Identifying and extracting actionable tasks from meeting discussions._
 - **Summarizer Agent**: `http://localhost:8001/docs` (API docs)
 - **Task Extractor Agent**: `http://localhost:8002/docs` (API docs)
 
+## MCP Integration
+
+### For MCP Clients
+
+To integrate with MCP-compliant clients:
+
+1. **Discover Tools:**
+   ```bash
+   curl http://localhost:8001/.well-known/mcp.json
+   curl http://localhost:8002/.well-known/mcp.json
+   ```
+
+2. **Invoke Tools:**
+   ```bash
+   curl -X POST http://localhost:8001/invoke \
+     -H "Content-Type: application/json" \
+     -d '{"name": "summarize_transcript", "arguments": {"transcript": "Your transcript here..."}}'
+   ```
+
+### MCP Client Libraries
+
+This application works with any MCP-compliant client library:
+- [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
+- [MCP JavaScript SDK](https://github.com/modelcontextprotocol/js-sdk)
+- [MCP Go SDK](https://github.com/modelcontextprotocol/go-sdk)
+
 ## Troubleshooting
 
 - **"ModuleNotFoundError: No module named 'agents'"**: Make sure you're running commands from the project root directory
 - **"uvicorn: command not found"**: Use `python3 -m uvicorn` instead of just `uvicorn`
 - **API Key Issues**: Ensure `openai_key.txt` exists and contains a valid OpenAI API key
 - **Port Conflicts**: Make sure ports 8000, 8001, and 8002 are available
+- **MCP Discovery Issues**: Verify agents are running and accessible at their respective ports
 
 ## Development
 
@@ -147,9 +221,9 @@ prettier --write index.html README.md
 mcps/
 ├── agents/
 │   ├── __init__.py
-│   ├── summarizer_agent.py
-│   ├── task_extractor_agent.py
-│   ├── super_agent.py
+│   ├── summarizer_agent.py      # MCP-compliant summarizer
+│   ├── task_extractor_agent.py  # MCP-compliant task extractor
+│   ├── super_agent.py           # MCP-compliant orchestrator
 │   ├── models.py
 │   ├── config.py
 │   └── utils.py

@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 import logging
 
 from .models import TranscriptInput
@@ -18,17 +18,32 @@ task_app = FastAPI(
 )
 
 
-@task_app.get("/.well-known/ai-plugin.json")
+@task_app.get("/.well-known/mcp.json")
 def discover() -> Dict[str, Any]:
-    """Discover available tools for this agent."""
+    """Discover available tools for this agent (MCP compliant)."""
     return {
         "tools": [
             {
                 "name": "extract_tasks",
                 "description": "Finds actionable tasks mentioned in a transcript and returns them as a JSON list.",
-                "parameters": TranscriptInput.schema(),
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "transcript": {
+                            "type": "string",
+                            "description": "The meeting transcript to process",
+                            "minLength": 10,
+                            "maxLength": 10000
+                        }
+                    },
+                    "required": ["transcript"]
+                }
             }
-        ]
+        ],
+        "resources": [],
+        "capabilities": {
+            "tools": {}
+        }
     }
 
 
@@ -40,7 +55,7 @@ class InvokeRequest(BaseModel):
 
 
 @task_app.post("/invoke")
-async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
+async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
     """
     MCP standard invoke endpoint that routes to the appropriate tool.
 
@@ -48,7 +63,7 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
         request: Contains tool name and arguments
 
     Returns:
-        Standardized response from the invoked tool
+        MCP-compliant response with content array
     """
     try:
         log_tool_invocation(request.name, request.arguments)
@@ -76,7 +91,17 @@ Focus on:
 - Deadlines or timeframes mentioned
 - Follow-up actions required"""
 
-            return await process_transcript_tool(data, prompt)
+            result = await process_transcript_tool(data, prompt)
+            
+            # Return MCP-compliant response
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": result["output"]
+                    }
+                ]
+            }
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown tool: {request.name}")

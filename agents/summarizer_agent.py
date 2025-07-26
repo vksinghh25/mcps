@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 import logging
 
 from .models import TranscriptInput
@@ -18,22 +18,48 @@ summarizer_app = FastAPI(
 )
 
 
-@summarizer_app.get("/.well-known/ai-plugin.json")
+@summarizer_app.get("/.well-known/mcp.json")
 def discover() -> Dict[str, Any]:
-    """Discover available tools for this agent."""
+    """Discover available tools for this agent (MCP compliant)."""
     return {
         "tools": [
             {
                 "name": "summarize_transcript",
                 "description": "Summarizes a transcript into a short paragraph.",
-                "parameters": TranscriptInput.schema(),
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "transcript": {
+                            "type": "string",
+                            "description": "The meeting transcript to process",
+                            "minLength": 10,
+                            "maxLength": 10000
+                        }
+                    },
+                    "required": ["transcript"]
+                }
             },
             {
                 "name": "highlight_key_points",
                 "description": "Extracts 3–5 main insights from a transcript as bullet points.",
-                "parameters": TranscriptInput.schema(),
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "transcript": {
+                            "type": "string",
+                            "description": "The meeting transcript to process",
+                            "minLength": 10,
+                            "maxLength": 10000
+                        }
+                    },
+                    "required": ["transcript"]
+                }
             },
-        ]
+        ],
+        "resources": [],
+        "capabilities": {
+            "tools": {}
+        }
     }
 
 
@@ -45,7 +71,7 @@ class InvokeRequest(BaseModel):
 
 
 @summarizer_app.post("/invoke")
-async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
+async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
     """
     MCP standard invoke endpoint that routes to the appropriate tool.
 
@@ -53,7 +79,7 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
         request: Contains tool name and arguments
 
     Returns:
-        Standardized response from the invoked tool
+        MCP-compliant response with content array
     """
     try:
         log_tool_invocation(request.name, request.arguments)
@@ -68,7 +94,17 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, str]:
 
 Please provide a clear, concise summary that captures the main points and outcomes of this meeting."""
 
-            return await process_transcript_tool(data, prompt)
+            result = await process_transcript_tool(data, prompt)
+            
+            # Return MCP-compliant response
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": result["output"]
+                    }
+                ]
+            }
 
         elif request.name == "highlight_key_points":
             # Validate and parse arguments
@@ -84,7 +120,17 @@ Please provide the key points in a clear, bulleted format. Focus on:
 - Important insights or findings
 - Next steps discussed"""
 
-            return await process_transcript_tool(data, prompt)
+            result = await process_transcript_tool(data, prompt)
+            
+            # Return MCP-compliant response
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": result["output"]
+                    }
+                ]
+            }
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown tool: {request.name}")

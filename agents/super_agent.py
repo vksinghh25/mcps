@@ -197,8 +197,21 @@ IMPORTANT: Respond with ONLY the exact tool name from the list above. Do not add
                 result = response.json()
                 logger.info(f"Sub-agent response received for {tool_name}")
 
+                # Extract content from MCP-compliant response
+                if "content" in result and result["content"]:
+                    # Get the text content from the MCP response
+                    mcp_content = result["content"][0]
+                    if mcp_content.get("type") == "text":
+                        # Convert MCP response to our internal format
+                        internal_result = {"output": mcp_content["text"]}
+                    else:
+                        internal_result = {"output": str(mcp_content)}
+                else:
+                    # Fallback for non-MCP responses
+                    internal_result = result
+
                 # Format the response based on the tool type
-                return format_response(tool_name, result, data.transcript)
+                return format_response(tool_name, internal_result, data.transcript)
             except Exception as e:
                 logger.error(f"Failed to parse response from sub-agent: {e}")
                 return {

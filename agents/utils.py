@@ -145,7 +145,7 @@ def format_response(
 
     Args:
         tool_name: The name of the tool that was used
-        result: The raw result from the sub-agent
+        result: The raw result from the sub-agent (MCP-compliant format)
         transcript: The original transcript
 
     Returns:
@@ -153,7 +153,7 @@ def format_response(
     """
     try:
         if tool_name == "summarize_transcript":
-            # Handle the actual response structure from sub-agents
+            # Handle MCP-compliant response structure
             output = result.get("output", "")
             if not output:
                 return {

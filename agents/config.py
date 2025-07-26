@@ -19,8 +19,8 @@ class MicroAgentConfig:
     SUMMARIZER_URL = "http://localhost:8001"
     TASK_EXTRACTOR_URL = "http://localhost:8002"
     PLUGIN_ENDPOINTS = [
-        f"{SUMMARIZER_URL}/.well-known/ai-plugin.json",
-        f"{TASK_EXTRACTOR_URL}/.well-known/ai-plugin.json",
+        f"{SUMMARIZER_URL}/.well-known/mcp.json",
+        f"{TASK_EXTRACTOR_URL}/.well-known/mcp.json",
     ]
 
 
