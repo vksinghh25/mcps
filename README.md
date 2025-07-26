@@ -12,7 +12,7 @@ A multi-agent system that analyzes meeting transcripts using AI-powered summariz
 
 ## MCP Compliance
 
-This application is fully compliant with the **Model Context Protocol (MCP)** standard:
+This application is fully compliant with the **Model Context Protocol (MCP)** standard as defined in the [official MCP specification](https://modelcontextprotocol.io/specification):
 
 ### ✅ MCP Standard Implementation
 
@@ -182,6 +182,8 @@ This application works with any MCP-compliant client library:
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [MCP JavaScript SDK](https://github.com/modelcontextprotocol/js-sdk)
 - [MCP Go SDK](https://github.com/modelcontextprotocol/go-sdk)
+
+For more information about the MCP standard, visit the [official MCP specification](https://modelcontextprotocol.io/specification) and [GitHub repository](https://github.com/modelcontextprotocol/specification).
 
 ## Troubleshooting
 
