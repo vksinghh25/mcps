@@ -151,11 +151,7 @@ _Identifying and extracting actionable tasks from meeting discussions._
 - **MCP Protocol**: Uses Model Context Protocol for agent communication
 - **Responsive Design**: UI adapts to mobile devices with vertical stacking
 
-## API Endpoints
 
-- **Super Agent**: `http://localhost:8000/` (Web UI) and `/ask` (API)
-- **Summarizer Agent**: `http://localhost:8001/docs` (API docs)
-- **Task Extractor Agent**: `http://localhost:8002/docs` (API docs)
 
 ## MCP Integration
 
