@@ -13,7 +13,9 @@ def run_command(command, description):
     """Run a command and handle errors."""
     print(f"🔄 {description}...")
     try:
-        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(
+            command, shell=True, check=True, capture_output=True, text=True
+        )
         print(f"✅ {description} completed successfully")
         if result.stdout:
             print(result.stdout)
@@ -30,19 +32,19 @@ def run_command(command, description):
 def main():
     """Format all code files in the project."""
     print("🎨 Starting code formatting...")
-    
+
     # Format Python files with black
     success1 = run_command(
         "python3 -m black agents/ --line-length=88",
-        "Formatting Python files with Black"
+        "Formatting Python files with Black",
     )
-    
+
     # Format HTML and Markdown files with Prettier
     success2 = run_command(
         "prettier --write index.html README.md",
-        "Formatting HTML and Markdown files with Prettier"
+        "Formatting HTML and Markdown files with Prettier",
     )
-    
+
     if success1 and success2:
         print("\n🎉 All files formatted successfully!")
         print("✨ Your code is now beautifully formatted!")
@@ -52,4 +54,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
