@@ -1,14 +1,13 @@
 """Super Agent."""
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Dict, Any, List
 import httpx
 import logging
 
-from .models import TranscriptInput
 from .config import MicroAgentConfig
 from .utils import call_llm, log_tool_invocation, format_response
 

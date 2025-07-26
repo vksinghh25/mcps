@@ -8,9 +8,8 @@ Run this after starting all agents to verify they follow MCP standards.
 
 import asyncio
 import httpx
-import json
 import sys
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 
 class MCPComplianceTester:

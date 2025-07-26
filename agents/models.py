@@ -1,7 +1,7 @@
 """Shared Pydantic models."""
 
 from pydantic import BaseModel, Field, validator
-from typing import List, Optional, Dict, Any
+from typing import Optional, Dict, Any
 from .config import validate_transcript
 
 

@@ -6,7 +6,6 @@ Formats all Python, HTML, and Markdown files.
 
 import subprocess
 import sys
-import os
 
 
 def run_command(command, description):
