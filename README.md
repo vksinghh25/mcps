@@ -118,22 +118,22 @@ python3 -m uvicorn agents.super_agent:super_app --reload --port 8000
 
 ## Application Screenshots
 
-### Welcome Page
+#### Welcome Page
 
 ![Welcome Page](docs/images/welcome-page.png)
 _The clean, modern interface users see when first opening the application._
 
-### Summarize Flow {#summarize-flow}
+#### Summarize Flow
 
 ![Summarize Flow](docs/images/summarize-flow.png)
 _The application summarizing a meeting transcript with a brief, concise style._
 
-### Key Highlights Flow {#key-highlights-flow}
+#### Key Highlights Flow
 
 ![Key Highlights Flow](docs/images/key-highlights-flow.png)
 _Extracting key insights and main points from a meeting transcript as bullet points._
 
-### Task Extraction Flow {#task-extraction-flow}
+#### Task Extraction Flow
 
 ![Task Extraction Flow](docs/images/task-extraction-flow.png)
 _Identifying and extracting actionable tasks from meeting discussions._
