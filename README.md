@@ -4,9 +4,9 @@ A multi-agent system that analyzes meeting transcripts using AI-powered summariz
 
 ## Features
 
-- **Summarize**: Generate concise summaries of meeting transcripts (see [screenshots](#application-screenshots))
-- **Key Highlights**: Extract and display key points as bullet points (•) (see [screenshots](#application-screenshots))
-- **Grab Tasks**: Identify actionable tasks from meeting discussions (see [screenshots](#application-screenshots))
+- **Summarize**: Generate concise summaries of meeting transcripts (see [screenshots](#summarize-flow))
+- **Key Highlights**: Extract and display key points as bullet points (•) (see [screenshots](#key-highlights-flow))
+- **Grab Tasks**: Identify actionable tasks from meeting discussions (see [screenshots](#task-extraction-flow))
 - **Modern Web UI**: Clean, responsive horizontal layout interface for easy interaction
 - **MCP Compliant**: Full adherence to Model Context Protocol standards
 
@@ -123,17 +123,17 @@ python3 -m uvicorn agents.super_agent:super_app --reload --port 8000
 ![Welcome Page](docs/images/welcome-page.png)
 _The clean, modern interface users see when first opening the application._
 
-### Summarize Flow
+### Summarize Flow {#summarize-flow}
 
 ![Summarize Flow](docs/images/summarize-flow.png)
 _The application summarizing a meeting transcript with a brief, concise style._
 
-### Key Highlights Flow
+### Key Highlights Flow {#key-highlights-flow}
 
 ![Key Highlights Flow](docs/images/key-highlights-flow.png)
 _Extracting key insights and main points from a meeting transcript as bullet points._
 
-### Task Extraction Flow
+### Task Extraction Flow {#task-extraction-flow}
 
 ![Task Extraction Flow](docs/images/task-extraction-flow.png)
 _Identifying and extracting actionable tasks from meeting discussions._
