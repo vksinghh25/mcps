@@ -221,7 +221,7 @@ mcps/
 │   ├── __init__.py
 │   ├── summarizer_agent.py      # MCP-compliant summarizer
 │   ├── task_extractor_agent.py  # MCP-compliant task extractor
-│   ├── super_agent.py           # MCP-compliant orchestrator
+│   ├── super_agent.py           # Web UI coordinator & orchestrator
 │   ├── models.py
 │   ├── config.py
 │   └── utils.py
