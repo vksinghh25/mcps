@@ -33,17 +33,15 @@ def discover() -> Dict[str, Any]:
                             "type": "string",
                             "description": "The meeting transcript to process",
                             "minLength": 10,
-                            "maxLength": 10000
+                            "maxLength": 10000,
                         }
                     },
-                    "required": ["transcript"]
-                }
+                    "required": ["transcript"],
+                },
             }
         ],
         "resources": [],
-        "capabilities": {
-            "tools": {}
-        }
+        "capabilities": {"tools": {}},
     }
 
 
@@ -92,16 +90,9 @@ Focus on:
 - Follow-up actions required"""
 
             result = await process_transcript_tool(data, prompt)
-            
+
             # Return MCP-compliant response
-            return {
-                "content": [
-                    {
-                        "type": "text",
-                        "text": result["output"]
-                    }
-                ]
-            }
+            return {"content": [{"type": "text", "text": result["output"]}]}
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown tool: {request.name}")
