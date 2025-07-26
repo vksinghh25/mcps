@@ -4,10 +4,10 @@ A multi-agent system that analyzes meeting transcripts using AI-powered summariz
 
 ## Features
 
-- **Summarize**: Generate concise summaries of meeting transcripts (see [screenshots](#summarize-flow))
-- **Key Highlights**: Extract and display key points as bullet points (•) (see [screenshots](#key-highlights-flow))
-- **Grab Tasks**: Identify actionable tasks from meeting discussions (see [screenshots](#task-extraction-flow))
-- **Modern Web UI**: Clean, responsive horizontal layout interface for easy interaction
+- **Modern Web UI**: Clean, responsive horizontal layout interface for easy interaction (see [screenshot](#welcome-page))
+- **Summarize**: Generate concise summaries of meeting transcripts (see [screenshot](#summarize-flow))
+- **Key Highlights**: Extract and display key points as bullet points (•) (see [screenshot](#key-highlights-flow))
+- **Grab Tasks**: Identify actionable tasks from meeting discussions (see [screenshot](#task-extraction-flow))
 - **MCP Compliant**: Full adherence to Model Context Protocol standards
 
 ## MCP Compliance
