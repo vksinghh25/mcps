@@ -33,11 +33,11 @@ def discover() -> Dict[str, Any]:
                             "type": "string",
                             "description": "The meeting transcript to process",
                             "minLength": 10,
-                            "maxLength": 10000,
+                            "maxLength": 10000
                         }
                     },
-                    "required": ["transcript"],
-                },
+                    "required": ["transcript"]
+                }
             },
             {
                 "name": "highlight_key_points",
@@ -49,15 +49,17 @@ def discover() -> Dict[str, Any]:
                             "type": "string",
                             "description": "The meeting transcript to process",
                             "minLength": 10,
-                            "maxLength": 10000,
+                            "maxLength": 10000
                         }
                     },
-                    "required": ["transcript"],
-                },
+                    "required": ["transcript"]
+                }
             },
         ],
         "resources": [],
-        "capabilities": {"tools": {}},
+        "capabilities": {
+            "tools": {}
+        }
     }
 
 
@@ -93,9 +95,16 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
 Please provide a clear, concise summary that captures the main points and outcomes of this meeting."""
 
             result = await process_transcript_tool(data, prompt)
-
+            
             # Return MCP-compliant response
-            return {"content": [{"type": "text", "text": result["output"]}]}
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": result["output"]
+                    }
+                ]
+            }
 
         elif request.name == "highlight_key_points":
             # Validate and parse arguments
@@ -112,9 +121,16 @@ Please provide the key points in a clear, bulleted format. Focus on:
 - Next steps discussed"""
 
             result = await process_transcript_tool(data, prompt)
-
+            
             # Return MCP-compliant response
-            return {"content": [{"type": "text", "text": result["output"]}]}
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": result["output"]
+                    }
+                ]
+            }
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown tool: {request.name}")
