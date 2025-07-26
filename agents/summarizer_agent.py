@@ -61,9 +61,6 @@ def discover() -> Dict[str, Any]:
     }
 
 
-
-
-
 @summarizer_app.post("/invoke")
 async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
     """

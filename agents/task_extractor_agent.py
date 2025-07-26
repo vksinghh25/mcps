@@ -45,9 +45,6 @@ def discover() -> Dict[str, Any]:
     }
 
 
-
-
-
 @task_app.post("/invoke")
 async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
     """
