@@ -78,11 +78,11 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
             # Validate and parse arguments
             data = TranscriptInput(**request.arguments)
 
-            prompt = f"""Summarize the following transcript in a brief, concise style:
-
-{data.transcript}
-
-Please provide a clear, concise summary that captures the main points and outcomes of this meeting."""
+            prompt = (
+                "Summarize the following transcript in a brief, concise style:\n\n"
+                f"{data.transcript}\n\n"
+                "Please provide a clear, concise summary that captures the main points and outcomes of this meeting."
+            )
 
             result = await process_transcript_tool(data, prompt)
 
@@ -93,15 +93,15 @@ Please provide a clear, concise summary that captures the main points and outcom
             # Validate and parse arguments
             data = TranscriptInput(**request.arguments)
 
-            prompt = f"""Extract 3-5 key insights from the following transcript as bullet points:
-
-{data.transcript}
-
-Please provide the key points in a clear, bulleted format. Focus on:
-- Main decisions made
-- Action items identified
-- Important insights or findings
-- Next steps discussed"""
+            prompt = (
+                "Extract 3-5 key insights from the following transcript as bullet points:\n\n"
+                f"{data.transcript}\n\n"
+                "Please provide the key points in a clear, bulleted format. Focus on:\n"
+                "- Main decisions made\n"
+                "- Action items identified\n"
+                "- Important insights or findings\n"
+                "- Next steps discussed"
+            )
 
             result = await process_transcript_tool(data, prompt)
 

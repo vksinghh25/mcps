@@ -146,15 +146,14 @@ async def ask(data: AskInput) -> Dict[str, Any]:
             ]
         )
 
-        llm_prompt = f"""Given the following user prompt and transcript, which tool should be used?
-
-Available tools (respond with the EXACT tool name):
-{tool_list}
-
-User prompt: {data.prompt}
-Transcript: {data.transcript[:500]}...
-
-IMPORTANT: Respond with ONLY the exact tool name from the list above. Do not add any additional text or descriptions."""
+        llm_prompt = (
+            "Given the following user prompt and transcript, which tool should be used?\n\n"
+            "Available tools (respond with the EXACT tool name):\n"
+            f"{tool_list}\n\n"
+            f"User prompt: {data.prompt}\n"
+            f"Transcript: {data.transcript[:500]}...\n\n"
+            "IMPORTANT: Respond with ONLY the exact tool name from the list above. Do not add any additional text or descriptions."
+        )
 
         # Get tool selection from LLM
         tool_name = await call_llm(llm_prompt, max_tokens=32, temperature=0)

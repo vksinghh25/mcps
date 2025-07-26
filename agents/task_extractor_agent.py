@@ -62,24 +62,23 @@ async def invoke_tool(request: InvokeRequest) -> Dict[str, Any]:
             # Validate and parse arguments
             data = TranscriptInput(**request.arguments)
 
-            prompt = f"""Extract all actionable tasks from the following transcript as a JSON list:
-
-{data.transcript}
-
-Please return the tasks in this exact JSON format:
-{{
-  "actionable_tasks": [
-    "Task 1 description",
-    "Task 2 description",
-    "Task 3 description"
-  ]
-}}
-
-Focus on:
-- Specific action items assigned to people
-- Tasks with clear deliverables
-- Deadlines or timeframes mentioned
-- Follow-up actions required"""
+            prompt = (
+                "Extract all actionable tasks from the following transcript as a JSON list:\n\n"
+                f"{data.transcript}\n\n"
+                "Please return the tasks in this exact JSON format:\n"
+                "{\n"
+                '  "actionable_tasks": [\n'
+                '    "Task 1 description",\n'
+                '    "Task 2 description",\n'
+                '    "Task 3 description"\n'
+                "  ]\n"
+                "}\n\n"
+                "Focus on:\n"
+                "- Specific action items assigned to people\n"
+                "- Tasks with clear deliverables\n"
+                "- Deadlines or timeframes mentioned\n"
+                "- Follow-up actions required"
+            )
 
             result = await process_transcript_tool(data, prompt)
 
