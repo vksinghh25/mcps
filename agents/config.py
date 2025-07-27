@@ -1,5 +1,6 @@
 """Shared configuration."""
 
+
 class LLMConfig:
     """LLM configuration."""
 
