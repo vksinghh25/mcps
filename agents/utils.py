@@ -32,21 +32,7 @@ async def call_llm(
     max_tokens: Optional[int] = None,
     temperature: Optional[float] = None,
 ) -> str:
-    """
-    Call OpenAI LLM with error handling and logging.
-
-    Args:
-        prompt: The prompt to send to the LLM
-        model: Model to use (defaults to LLMConfig.MODEL)
-        max_tokens: Max tokens (defaults to LLMConfig.MAX_TOKENS)
-        temperature: Temperature (defaults to LLMConfig.TEMPERATURE)
-
-    Returns:
-        The LLM response content
-
-    Raises:
-        HTTPException: If the LLM call fails
-    """
+    """Call OpenAI LLM with error handling and logging."""
     try:
         _ensure_openai_initialized()
         logger.info(f"Calling LLM with prompt length: {len(prompt)}")
@@ -89,26 +75,12 @@ async def call_llm(
 
 
 def build_tool_response(output: str) -> Dict[str, str]:
-    """
-    Build standardized tool response.
-
-    Args:
-        output: The output content
-
-    Returns:
-        Standardized response dictionary
-    """
+    """Build standardized tool response."""
     return {"output": output}
 
 
 def log_tool_invocation(tool_name: str, input_data: Dict[str, Any]) -> None:
-    """
-    Log tool invocation for monitoring.
-
-    Args:
-        tool_name: Name of the tool being invoked
-        input_data: Input data (will be sanitized for logging)
-    """
+    """Log tool invocation for monitoring."""
     # Sanitize input data for logging (remove sensitive content)
     sanitized_data = {}
     for key, value in input_data.items():
@@ -123,16 +95,7 @@ def log_tool_invocation(tool_name: str, input_data: Dict[str, Any]) -> None:
 
 
 async def process_transcript_tool(data: Any, prompt: str) -> Dict[str, str]:
-    """
-    Process transcript-based tools.
-
-    Args:
-        data: Validated input data
-        prompt: The prompt to send to the LLM
-
-    Returns:
-        Standardized response from the tool
-    """
+    """Process transcript-based tools."""
     result = await call_llm(prompt)
     return build_tool_response(result)
 
@@ -140,17 +103,7 @@ async def process_transcript_tool(data: Any, prompt: str) -> Dict[str, str]:
 def format_response(
     tool_name: str, result: Dict[str, Any], transcript: str
 ) -> Dict[str, Any]:
-    """
-    Format the response from sub-agents into a structured, user-friendly format.
-
-    Args:
-        tool_name: The name of the tool that was used
-        result: The raw result from the sub-agent (MCP-compliant format)
-        transcript: The original transcript
-
-    Returns:
-        Formatted response with title, content, and metadata
-    """
+    """Format sub-agent response into user-friendly format."""
     try:
         if tool_name == "summarize_transcript":
             # Handle MCP-compliant response structure
