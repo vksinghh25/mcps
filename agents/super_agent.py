@@ -44,8 +44,8 @@ class AskInput(BaseModel):
     )
 
 
-async def fetch_tools_from_plugin(endpoint: str) -> List[Dict[str, Any]]:
-    """Fetch tool definitions from a plugin endpoint."""
+async def fetch_tools_from_micro_agent(endpoint: str) -> List[Dict[str, Any]]:
+    """Fetch tool definitions from a micro-agent endpoint."""
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(endpoint)
@@ -71,7 +71,7 @@ async def populate_tool_registry():
 
     for endpoint in MicroAgentConfig.PLUGIN_ENDPOINTS:
         try:
-            tools = await fetch_tools_from_plugin(endpoint)
+            tools = await fetch_tools_from_micro_agent(endpoint)
             for tool in tools:
                 # Use 'name' field as per MCP standards
                 tool_registry[tool["name"]] = tool
@@ -146,10 +146,6 @@ async def ask(data: AskInput) -> Dict[str, Any]:
         # Prepare payload for sub-agent
         tool = tool_registry[tool_name]
         payload = {"transcript": data.transcript}
-
-        # Add optional parameters based on tool requirements
-        if "context" in tool.get("parameters", {}).get("properties", {}):
-            payload["context"] = "end of week"
 
         # Determine sub-agent URL and make request using MCP standard
         sub_agent_url = determine_sub_agent_url(tool_name)
